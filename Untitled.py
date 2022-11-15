@@ -2,7 +2,7 @@ import requests
 from pprint import pprint
 
 
-class Photos_vk:
+class PhotosVk:
     list_sizes_url = []
     all_on_json_list__ = []
     url = 'https://api.vk.com/method/'
@@ -16,7 +16,7 @@ class Photos_vk:
 
     
     def get_photos_at_vk(self , id: str):
-        photos_url = Photos_vk.url + 'photos.get'
+        photos_url = PhotosVk.url + 'photos.get'
         params = {
             'album_id': 'profile',
             'extended': 1,
@@ -25,7 +25,7 @@ class Photos_vk:
         response = requests.get(photos_url, params={**self.params, **params})
         
         r = response.json()
-        lists =  r['response']['items']
+        lists = r['response']['items']
 
         list_likes = []
         for dict_like_sizes in lists:
@@ -39,19 +39,19 @@ class Photos_vk:
             dict_size_2 = {}
             size_list = dict_size['sizes']
             end_dict_size = size_list[-1]
-            h= end_dict_size['height']
-            w= end_dict_size['width']
+            h = end_dict_size['height']
+            w = end_dict_size['width']
             dict_size_2['size'] = [f'{h} * {w}', end_dict_size['url']]
             list_sizes.append(dict_size_2)
 
         
         for k in zip(list_likes, list_sizes):
-            Photos_vk.all_on_json_list__.append({**k[0], **k[1]})
+            PhotosVk.all_on_json_list__.append({**k[0], **k[1]})
 
-        return Photos_vk.all_on_json_list__ 
+        return PhotosVk.all_on_json_list__ 
 
     def size_url(self, id: str):  
-        photos_url = Photos_vk.url + 'photos.get'
+        photos_url = PhotosVk.url + 'photos.get'
         params = {
             'album_id': 'profile',
             'extended': 1,
@@ -81,14 +81,14 @@ class Photos_vk:
 class Yadisk:
     url = 'https://cloud-api.yandex.net/v1/disk/resources'
     def __init__(self):
-        self.headers= {
+        self.headers = {
             "Content-type": "application/json",
             'Authorization': 'OAuth ' # токен здесь
             }
 
-    def create_folder(self, folder_name,vk_id ,range_= 5):
+    def create_folder(self, folder_name,vk_id ,range_=5):
         headers_ = {'Accept': 'application/json'}
-        response = requests.put(Yadisk.url, headers= {**self.headers,**headers_}, params= f'path= {folder_name}')
+        response = requests.put(Yadisk.url, headers= {**self.headers,**headers_}, params=f'path= {folder_name}')
         list_in_def = photo.size_url(vk_id)
         renged_list = list_in_def [:range_]
         for name,size in renged_list:   
@@ -101,6 +101,6 @@ class Yadisk:
 
 
 
-photo = Photos_vk()
+photo = PhotosVk()
 put_photos = Yadisk()
 pprint (put_photos.create_folder('new_reposit',vk_id= ))
